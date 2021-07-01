@@ -15,7 +15,7 @@ public class Comment {
     @ManyToOne(fetch = FetchType.EAGER)
     private Post post;
     @Column(nullable = false)
-    private String userName;
+    private String username;
     @Column(nullable = false)
     private Long userId;
     @Column(columnDefinition = "text", nullable = false)
