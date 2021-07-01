@@ -48,14 +48,19 @@ public class UserService {
 
     public User updateUser(UserDTO userDTO, Principal principal){
         User user = getUserByPrincipal(principal);
-        user.setName(userDTO.getFirstName());
-        user.setLastname(userDTO.getLastName());
+        user.setName(userDTO.getFirstname());
+        user.setLastname(userDTO.getLastname());
         user.setBio(userDTO.getBio());
         return userRepository.save(user);
     }
 
     public User getCurrentUser(Principal principal){
         return getUserByPrincipal(principal);
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findUserById(userId).orElseThrow(() ->
+                new UsernameNotFoundException("Username not found"));
     }
 
     private User getUserByPrincipal(Principal principal){
@@ -65,4 +70,6 @@ public class UserService {
                         "Username not found with username " + username
                 ));
     }
+
+
 }

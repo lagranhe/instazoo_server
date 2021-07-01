@@ -26,7 +26,7 @@ public class Post {
     private Set<String> likedUsers = new HashSet<>();
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-    @OneToMany(cascade = CascadeType.REFRESH)
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "post", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
     @Column(updatable = false)
     private LocalDateTime createdTime;

@@ -34,17 +34,18 @@ public class CommentService {
         this.userRepository = userRepository;
     }
 
-    public Comment saveComment(Long postId, CommentDTO commentDTO, Principal principal){
+    public Comment saveComment(Long postId, CommentDTO commentDTO, Principal principal) {
         User user = getUserByPrincipal(principal);
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException("Post cannot be found for username: "
-                        + user.getEmail()));
+                .orElseThrow(() -> new PostNotFoundException("Post cannot be found for username: " + user.getEmail()));
+
         Comment comment = new Comment();
         comment.setPost(post);
         comment.setUserId(user.getId());
         comment.setUsername(user.getUsername());
         comment.setMessage(commentDTO.getMessage());
-        LOG.info("Saving comment for Post + {}", post.getId());
+
+        LOG.info("Saving comment for Post: {}", post.getId());
         return commentRepository.save(comment);
     }
 

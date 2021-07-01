@@ -51,7 +51,7 @@ public class ImageUploadService {
 
         ImageModel imageModel = new ImageModel();
         imageModel.setUserId(user.getId());
-        imageModel.setImageByte(compressBytes(file.getBytes()));
+        imageModel.setImageBytes(compressBytes(file.getBytes()));
         imageModel.setName(file.getOriginalFilename());
         return imageRepository.save(imageModel);
     }
@@ -64,7 +64,7 @@ public class ImageUploadService {
                 .collect(toSinglePostCollector());
         ImageModel imageModel = new ImageModel();
         imageModel.setPostId(post.getId());
-        imageModel.setImageByte(compressBytes(file.getBytes()));
+        imageModel.setImageBytes(compressBytes(file.getBytes()));
         imageModel.setName(file.getOriginalFilename());
         LOG.info("Uploading image to Post {}", post.getId());
         return imageRepository.save(imageModel);
@@ -74,7 +74,7 @@ public class ImageUploadService {
         User user = getUserByPrincipal(principal);
         ImageModel imageModel = imageRepository.findByUserId(user.getId()).orElse(null);
         if (!ObjectUtils.isEmpty(imageModel)){
-            imageModel.setImageByte(decompressBytes(imageModel.getImageByte()));
+            imageModel.setImageBytes(decompressBytes(imageModel.getImageBytes()));
         }
         return imageModel;
     }
@@ -83,7 +83,7 @@ public class ImageUploadService {
         ImageModel imageModel = imageRepository.findByPostId(postId)
                 .orElseThrow(() -> new ImageNotFoundException("Cannot find image to Post: " + postId));
         if (!ObjectUtils.isEmpty(imageModel)){
-            imageModel.setImageByte(decompressBytes(imageModel.getImageByte()));
+            imageModel.setImageBytes(decompressBytes(imageModel.getImageBytes()));
         }
         return imageModel;
     }

@@ -21,10 +21,14 @@ public class Comment {
     @Column(columnDefinition = "text", nullable = false)
     private String message;
     @Column(updatable = false)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
+
+    public Comment() {
+    }
 
     @PrePersist
-    protected void onCreate(){
-        this.createDate = LocalDateTime.now();
+    protected void onCreate()
+    {
+        this.createdDate = LocalDateTime.now();
     }
 }
