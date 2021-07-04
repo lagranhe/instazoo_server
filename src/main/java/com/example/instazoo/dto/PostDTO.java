@@ -13,6 +13,6 @@ public class PostDTO {
     private String location;
     private String username;
     private Integer likes;
-    private Set<String> userLiked;
+    private Set<String> usersLiked;
 
 }
