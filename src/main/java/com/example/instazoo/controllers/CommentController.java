@@ -23,13 +23,18 @@ import java.util.stream.Collectors;
 @CrossOrigin
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
-    @Autowired
-    private CommentFacade commentFacade;
-    @Autowired
-    private ResponseErrorValidation responseErrorValidation;
+    private final CommentService commentService;
+    private final CommentFacade commentFacade;
+    private final ResponseErrorValidation responseErrorValidation;
 
+    @Autowired
+    public CommentController(CommentService commentService,
+                             CommentFacade commentFacade,
+                             ResponseErrorValidation responseErrorValidation) {
+        this.commentService = commentService;
+        this.commentFacade = commentFacade;
+        this.responseErrorValidation = responseErrorValidation;
+    }
 
     @PostMapping("/{postId}/create")
     public ResponseEntity<Object> createComment(@Valid @RequestBody CommentDTO commentDTO,
@@ -46,7 +51,7 @@ public class CommentController {
     }
 
     @GetMapping("/{postId}/all")
-    public ResponseEntity<List<CommentDTO>> getAllCommentsToPost(@PathVariable("postId") String postId){
+    public ResponseEntity<List<CommentDTO>> getAllCommentsToPost(@PathVariable("postId") String postId) {
         List<CommentDTO> commentDTOList = commentService.getAllCommentsForPost(Long.parseLong(postId))
                 .stream()
                 .map(commentFacade::commentToCommentDTO)
@@ -55,7 +60,7 @@ public class CommentController {
     }
 
     @PostMapping("/{commentId}/delete")
-    public ResponseEntity<MessageResponse> deleteComment(@PathVariable("commentId") String commentId){
+    public ResponseEntity<MessageResponse> deleteComment(@PathVariable("commentId") String commentId) {
         commentService.deleteComment(Long.parseLong(commentId));
         return new ResponseEntity<>(new MessageResponse("Post was deleted"), HttpStatus.OK);
     }

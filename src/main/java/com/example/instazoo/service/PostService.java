@@ -22,12 +22,14 @@ import java.util.Optional;
 public class PostService {
     public static final Logger LOG = LoggerFactory.getLogger(PostService.class);
 
-    private PostRepository postRepository;
-    private UserRepository userRepository;
-    private ImageRepository imageRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final ImageRepository imageRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, ImageRepository imageRepository) {
+    public PostService(PostRepository postRepository,
+                       UserRepository userRepository,
+                       ImageRepository imageRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;

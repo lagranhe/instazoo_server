@@ -1,5 +1,6 @@
 package com.example.instazoo;
 
+import com.example.instazoo.security.SecurityConstants;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

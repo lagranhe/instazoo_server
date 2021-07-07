@@ -28,7 +28,7 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public User createUser(SignupRequest userIn){
+    public User createUser(SignupRequest userIn) {
         User user = new User();
         user.setEmail(userIn.getEmail());
         user.setName(userIn.getFirstname());
@@ -36,17 +36,17 @@ public class UserService {
         user.setUsername(userIn.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(userIn.getPassword()));
         user.getRoles().add(ERole.ROLE_USER);
-        try{
+        try {
             LOG.info("Saving User + {}" + userIn.getEmail());
             return userRepository.save(user);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             LOG.error("Error during registration. {}" + ex.getMessage());
             throw new UserExistException("The user " + user.getUsername() + " already exist." +
                     " Please check credentials");
         }
     }
 
-    public User updateUser(UserDTO userDTO, Principal principal){
+    public User updateUser(UserDTO userDTO, Principal principal) {
         User user = getUserByPrincipal(principal);
         user.setName(userDTO.getFirstname());
         user.setLastname(userDTO.getLastname());
@@ -54,7 +54,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User getCurrentUser(Principal principal){
+    public User getCurrentUser(Principal principal) {
         return getUserByPrincipal(principal);
     }
 
@@ -63,13 +63,12 @@ public class UserService {
                 new UsernameNotFoundException("Username not found"));
     }
 
-    private User getUserByPrincipal(Principal principal){
+    private User getUserByPrincipal(Principal principal) {
         String username = principal.getName();
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "Username not found with username " + username
                 ));
     }
-
 
 }

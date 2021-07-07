@@ -31,9 +31,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try{
+        try {
             String jwt = getJWTTokenFromRequest(request);
-            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)){
+            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
                 Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
                 User userDetails = customUserDetailsService.loadUserById(userId);
 
@@ -45,7 +45,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (Exception ex){
+        } catch (Exception ex) {
             LOG.error("Could not set user authentication. Error + " + ex);
         }
 
@@ -53,10 +53,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     }
 
-    private String getJWTTokenFromRequest(HttpServletRequest request){
+    private String getJWTTokenFromRequest(HttpServletRequest request) {
         String bearToken = request.getHeader(SecurityConstants.HEADER_STRING);
         if (StringUtils.hasText(bearToken)
-                && bearToken.startsWith(SecurityConstants.TOKEN_PREFIX)){
+                && bearToken.startsWith(SecurityConstants.TOKEN_PREFIX)) {
             return bearToken.split(" ")[1];
         } else {
             return null;

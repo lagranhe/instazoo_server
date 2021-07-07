@@ -28,7 +28,9 @@ public class CommentService {
     public static final Logger LOG = LoggerFactory.getLogger(CommentService.class);
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, PostRepository postRepository, UserRepository userRepository) {
+    public CommentService(CommentRepository commentRepository,
+                          PostRepository postRepository,
+                          UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
@@ -49,14 +51,13 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public List<Comment> getAllCommentsForPost(Long postId){
+    public List<Comment> getAllCommentsForPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post cannot be found"));
-        List<Comment> comments = commentRepository.findAllByPost(post);
-        return comments;
+        return commentRepository.findAllByPost(post);
     }
 
-    public void deleteComment(Long commentId){
+    public void deleteComment(Long commentId) {
         Optional<Comment> comment = commentRepository.findById(commentId);
         comment.ifPresent(commentRepository::delete);
     }

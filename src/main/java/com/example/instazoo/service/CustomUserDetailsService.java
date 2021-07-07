@@ -24,18 +24,18 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username){
+    public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findUserByEmail(username)
-                .orElseThrow(()->new UsernameNotFoundException("Username not " +
+                .orElseThrow(() -> new UsernameNotFoundException("Username not " +
                         "found with username " + username));
         return build(user);
     }
 
-    public User loadUserById(Long id){
+    public User loadUserById(Long id) {
         return userRepository.findUserById(id).orElse(null);
     }
 
-    public static User build(User user){
+    public static User build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.name()))
                 .collect(Collectors.toList());
@@ -47,6 +47,5 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getPassword(),
                 authorities);
     }
-
 
 }

@@ -1,6 +1,5 @@
 package com.example.instazoo.annotations;
 
-import com.example.instazoo.validations.EmailValidator;
 import com.example.instazoo.validations.PasswordMatchesValidator;
 
 import javax.validation.Constraint;
@@ -14,9 +13,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PasswordMatchesValidator.class)
 public @interface PasswordMatches {
+
     String message() default "Password do not matches";
 
-    Class<?>[] groups() default{};
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default{};
+    Class<? extends Payload>[] payload() default {};
 }

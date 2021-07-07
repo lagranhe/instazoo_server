@@ -23,16 +23,25 @@ import java.util.stream.Collectors;
 @CrossOrigin
 public class PostController {
 
+    private final PostFacade postFacade;
+    private final PostService postService;
+    private final ResponseErrorValidation responseErrorValidation;
+
     @Autowired
-    private PostFacade postFacade;
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private ResponseErrorValidation responseErrorValidation;
+    public PostController(PostFacade postFacade,
+                          PostService postService,
+                          ResponseErrorValidation responseErrorValidation) {
+        this.postFacade = postFacade;
+        this.postService = postService;
+        this.responseErrorValidation = responseErrorValidation;
+    }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createPost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult, Principal principal){
-        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+    public ResponseEntity<Object> createPost(@Valid @RequestBody PostDTO postDTO,
+                                             BindingResult bindingResult,
+                                             Principal principal){
+        ResponseEntity<Object> errors = responseErrorValidation
+                .mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
         Post post = postService.createPost(postDTO, principal);
@@ -68,7 +77,8 @@ public class PostController {
     }
 
     @PostMapping("/{postId}/delete")
-    public ResponseEntity<MessageResponse> deletePost(@PathVariable("postId") String postId, Principal principal){
+    public ResponseEntity<MessageResponse> deletePost(@PathVariable("postId") String postId,
+                                                      Principal principal){
         postService.deletePost(Long.parseLong(postId), principal);
         return new ResponseEntity<>(new MessageResponse("Post was deleted"), HttpStatus.OK);
     }

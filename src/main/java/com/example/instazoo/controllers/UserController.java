@@ -20,29 +20,37 @@ import java.security.Principal;
 @CrossOrigin
 public class UserController {
 
+    private final UserService userService;
+    private final UserFacade userFacade;
+    private final ResponseErrorValidation responseErrorValidation;
+
     @Autowired
-    private UserService userService;
-    @Autowired
-    private UserFacade userFacade;
-    @Autowired
-    private ResponseErrorValidation responseErrorValidation;
+    public UserController(UserService userService,
+                          UserFacade userFacade,
+                          ResponseErrorValidation responseErrorValidation) {
+        this.userService = userService;
+        this.userFacade = userFacade;
+        this.responseErrorValidation = responseErrorValidation;
+    }
 
     @GetMapping("/")
-    public ResponseEntity<UserDTO> getCurrentUser(Principal principal){
+    public ResponseEntity<UserDTO> getCurrentUser(Principal principal) {
         User user = userService.getCurrentUser(principal);
         UserDTO userDTO = userFacade.userToUserDTO(user);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserProfile(@PathVariable("userId") String userId){
+    public ResponseEntity<UserDTO> getUserProfile(@PathVariable("userId") String userId) {
         User user = userService.getUserById(Long.parseLong(userId));
         UserDTO userDTO = userFacade.userToUserDTO(user);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult, Principal principal){
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO userDTO,
+                                             BindingResult bindingResult,
+                                             Principal principal) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
         User user = userService.updateUser(userDTO, principal);

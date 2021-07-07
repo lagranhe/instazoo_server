@@ -2,6 +2,7 @@ package com.example.instazoo.security;
 
 import com.example.instazoo.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,10 +25,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final CustomUserDetailsService customUserDetailsService;
+
     @Autowired
-    private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    public SecurityConfig(JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+                          CustomUserDetailsService customUserDetailsService) {
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
+    public SecurityConfig(boolean disableDefaults, JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint, CustomUserDetailsService customUserDetailsService) {
+        super(disableDefaults);
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.customUserDetailsService = customUserDetailsService;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -53,12 +65,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    BCryptPasswordEncoder bCryptPasswordEncoder(){
+    BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public JWTAuthenticationFilter jwtAuthenticationFilter(){
+    public JWTAuthenticationFilter jwtAuthenticationFilter() {
         return new JWTAuthenticationFilter();
     }
 }

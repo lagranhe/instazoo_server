@@ -17,8 +17,12 @@ import java.security.Principal;
 @CrossOrigin
 public class ImageUploadController {
 
+    private final ImageUploadService imageUploadService;
+
     @Autowired
-    private ImageUploadService imageUploadService;
+    public ImageUploadController(ImageUploadService imageUploadService) {
+        this.imageUploadService = imageUploadService;
+    }
 
     @PostMapping("/upload")
     public ResponseEntity<MessageResponse> uploadImageToUser(@RequestParam("file") MultipartFile file,

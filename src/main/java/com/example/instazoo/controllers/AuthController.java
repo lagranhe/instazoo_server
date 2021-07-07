@@ -2,7 +2,7 @@ package com.example.instazoo.controllers;
 
 import com.example.instazoo.payload.request.LoginRequest;
 import com.example.instazoo.payload.request.SignupRequest;
-import com.example.instazoo.payload.response.JWTTockenSuccessResponse;
+import com.example.instazoo.payload.response.JWTTokenSuccessResponse;
 import com.example.instazoo.payload.response.MessageResponse;
 import com.example.instazoo.security.JWTTokenProvider;
 import com.example.instazoo.security.SecurityConstants;
@@ -27,17 +27,24 @@ import javax.validation.Valid;
 @PreAuthorize("permitAll()")
 public class AuthController {
 
+    private final JWTTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
+    private final ResponseErrorValidation responseErrorValidation;
+    private final UserService userService;
+
     @Autowired
-    private JWTTokenProvider jwtTokenProvider;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private ResponseErrorValidation responseErrorValidation;
-    @Autowired
-    private UserService userService;
+    public AuthController(JWTTokenProvider jwtTokenProvider,
+                          AuthenticationManager authenticationManager,
+                          ResponseErrorValidation responseErrorValidation,
+                          UserService userService) {
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.authenticationManager = authenticationManager;
+        this.responseErrorValidation = responseErrorValidation;
+        this.userService = userService;
+    }
 
     @PostMapping("/signin")
-    public ResponseEntity<Object> authenticationUser (@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult){
+    public ResponseEntity<Object> authenticationUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
@@ -47,19 +54,16 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = SecurityConstants.TOKEN_PREFIX + jwtTokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JWTTockenSuccessResponse(true, jwt));
+        return ResponseEntity.ok(new JWTTokenSuccessResponse(true, jwt));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<Object> registerUser(@Valid @RequestBody SignupRequest signupRequest,
-                                               BindingResult bindingResult){
+                                               BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
         userService.createUser(signupRequest);
         return ResponseEntity.ok(new MessageResponse("User registered successfully"));
     }
-
-
-
 }

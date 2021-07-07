@@ -40,12 +40,12 @@ public class ImageUploadService {
         this.postRepository = postRepository;
     }
 
-    public ImageModel uploadImageToUser(MultipartFile file, Principal principal) throws IOException{
+    public ImageModel uploadImageToUser(MultipartFile file, Principal principal) throws IOException {
         User user = getUserByPrincipal(principal);
         LOG.info("Uploading image profile to User {}", user.getUsername());
 
         ImageModel userProfileImage = imageRepository.findByUserId(user.getId()).orElse(null);
-        if (!ObjectUtils.isEmpty(userProfileImage)){
+        if (!ObjectUtils.isEmpty(userProfileImage)) {
             imageRepository.delete(userProfileImage);
         }
 
@@ -56,7 +56,9 @@ public class ImageUploadService {
         return imageRepository.save(imageModel);
     }
 
-    public ImageModel uploadImageToPost(MultipartFile file, Principal principal, Long postId) throws IOException{
+    public ImageModel uploadImageToPost(MultipartFile file,
+                                        Principal principal,
+                                        Long postId) throws IOException {
         User user = getUserByPrincipal(principal);
         Post post = user.getPosts()
                 .stream()
@@ -70,19 +72,19 @@ public class ImageUploadService {
         return imageRepository.save(imageModel);
     }
 
-    public ImageModel getImageToUser(Principal principal){
+    public ImageModel getImageToUser(Principal principal) {
         User user = getUserByPrincipal(principal);
         ImageModel imageModel = imageRepository.findByUserId(user.getId()).orElse(null);
-        if (!ObjectUtils.isEmpty(imageModel)){
+        if (!ObjectUtils.isEmpty(imageModel)) {
             imageModel.setImageBytes(decompressBytes(imageModel.getImageBytes()));
         }
         return imageModel;
     }
 
-    public ImageModel getImageToPost(Long postId){
+    public ImageModel getImageToPost(Long postId) {
         ImageModel imageModel = imageRepository.findByPostId(postId)
                 .orElseThrow(() -> new ImageNotFoundException("Cannot find image to Post: " + postId));
-        if (!ObjectUtils.isEmpty(imageModel)){
+        if (!ObjectUtils.isEmpty(imageModel)) {
             imageModel.setImageBytes(decompressBytes(imageModel.getImageBytes()));
         }
         return imageModel;
@@ -132,11 +134,11 @@ public class ImageUploadService {
                 ));
     }
 
-    private <T> Collector<T, ?, T> toSinglePostCollector(){
+    private <T> Collector<T, ?, T> toSinglePostCollector() {
         return Collectors.collectingAndThen(
                 Collectors.toList(),
                 list -> {
-                    if (list.size() != 1){
+                    if (list.size() != 1) {
                         throw new IllegalStateException();
                     }
                     return list.get(0);
