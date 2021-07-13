@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/post")
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:80", "http://localhost:4200"})
 public class PostController {
 
     private final PostFacade postFacade;

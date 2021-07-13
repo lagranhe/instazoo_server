@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:80", "http://localhost:4200"})
 @RestController
 @RequestMapping("/api/auth")
 @PreAuthorize("permitAll()")

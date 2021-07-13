@@ -14,7 +14,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("api/image/")
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:80", "http://localhost:4200"})
 public class ImageUploadController {
 
     private final ImageUploadService imageUploadService;

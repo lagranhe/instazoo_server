@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/comment")
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:80", "http://localhost:4200"})
 public class CommentController {
 
     private final CommentService commentService;
